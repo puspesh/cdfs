@@ -1,0 +1,13 @@
+{{template "header.html" .}}
+
+<h1>User created !</h1>
+<p>
+        <strong>Password</strong> is {{.user.Password}}
+</p>
+<p>
+        <strong>Email</strong> is {{.user.Email}}
+</p>
+
+<a href="/">Back</a>
+
+{{template "footer.html" .}}

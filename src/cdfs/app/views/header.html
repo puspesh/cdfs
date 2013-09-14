@@ -6,6 +6,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link rel="shortcut icon" type="image/png" href="/public/img/favicon.png">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/public/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/public/js/bootstrap.min.js"></script>
+
     <script src="/public/js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
     {{range .moreStyles}}
       <link rel="stylesheet" type="text/css" href="/public/{{.}}">
@@ -13,5 +22,37 @@
     {{range .moreScripts}}
       <script src="/public/{{.}}" type="text/javascript" charset="utf-8"></script>
     {{end}}
-  </head>
+
+    <style>
+      .navbar-fixed-top .navbar-inner {
+        text-shadow: 0 -1px 0 rgba(0,0,0,.15);
+        background: #563d7c;
+        color:#eee;
+        border-color: #463265;
+        box-shadow: 0 1px 0 rgba(255,255,255,.1);
+      }
+      .container.bodymain {
+        margin-top:100px;
+      }
+      .navbar .brand {
+        color: #ddd;
+        text-shadow:none;
+      }
+    </style>
+    
+    </head>
   <body>
+
+  <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">CDFS</a>
+
+          <ul class="nav pull-right">
+            <li>
+              <a href="#"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+  </div>div>

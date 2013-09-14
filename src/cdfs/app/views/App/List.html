@@ -1,0 +1,156 @@
+{{template "header.html" .}}
+<style>
+	header{background-color: #fff;height: 40px; padding: 10px; margin-bottom:10px;clear:both;}
+	header h1{margin:0px;width:400px; display:inline-block;color:#0088CC;}
+	header .btn-group{float:right;}
+	header .btn-group ul.dropdown-menu{padding-left:5px;}
+	
+	section{width:700px;margin:auto;border:1px solid #0088CC;border-radius:5px;display:inline-block;margin-left:10px;}
+	.row{margin:0px;
+    width: 400px;clear:both;padding:10px;}
+	.row .col1,.row .col2{float:left; width:200px;text-align:center;}
+	footer{text-align:right;padding:0 10px 10px 0;}
+	section header{padding:5px 0px 5px 10px; background-color: #0088CC;}
+	.left-nav{width:200px;display:inline-block;text-align:center;float:left;min-height:300px;padding-top:20px;}
+	.added_act{width:150px;border:1px solid #0088CC;border-radius:5px;margin:20px auto;}
+	.bodymain{margin-top:40px;}
+	.bs-example {
+margin-left: 0;
+margin-right: 0;
+background-color: #fff;
+border-width: 1px;
+border-color: #ddd;
+border-radius: 4px 4px 0 0;
+box-shadow: none;
+}
+.bs-example {
+position: relative;
+padding: 45px 15px 15px;
+margin: 0 -15px 15px;
+background-color: #fafafa;
+box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
+border-color: #e5e5e5 #eee #eee;
+border-style: solid;
+border-width: 1px 0;
+}
+</style>
+
+<!--<div class="col-md-9">
+
+	{{range $name, $fid := .user.GetFiles}}
+		<p>	{{$name}} {{$fid}} </p>
+	{{end}}
+</div>-->
+
+
+<div class="container-fluid bodymain">
+	
+   <div class="row-fluid">
+   <div class="span3">
+   <div class="well sidebar-nav">
+   <span class="btn-file"><input type="file" style="background: #fff;
+border: 1px solid #ddd;
+font-size: 12px;
+margin-bottom: 5px;
+padding: 2px;
+width: 268px;" /></span>
+		<button class="btn btn-large btn-primary" type="button">Upload Data</button>
+		<!--<div class="added_act">
+			<p>Added Acount</p>
+			<p>abc@dropbox.com</p>
+			<p>abc@google.com</p>
+			<p>abc@amazon.com</p>
+		</div>-->
+	</div>
+   </div>
+   <div class="span9">
+		<div class="bs-example">
+		    <table class="table table-striped">
+			 <thead>
+			<tr>
+			  <th>Name</th>
+			  <th>Service</th>
+			  <th>Size[kb]</th>
+			  <th>Uploaded On</th>
+			  <th>Meta-Data</th>
+			  
+			</tr>
+			</thead>
+		  <tbody>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			  
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr><tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			<tr>
+			  <td>file 1</td>
+			  <td>amzon</td>
+			  <td>50</td>
+			  <td>13/9/2013</td>
+			  <td>Meta Data</td>
+			</tr>
+			
+			
+			
+		  </tbody>
+</table>
+			
+			
+		</div>
+	</div>
+
+	</div>
+	</div>
+
+{{template "footer.html" .}}

@@ -1,4 +1,4 @@
-package app
+package models
 
 import (
     "fmt"
@@ -131,6 +131,25 @@ func RegisterUser(tokens map[string]string) string {
     c.Flush()
 
     return uid
+}
+
+func GetFileListForUser(userId string) map[string]string {
+    c := getConn()
+    defer c.Close()
+
+    res, err := redis.String(c.Do("GET", "user_"+userId+"_data"))
+    if err != nil {
+      fmt.Println("Error! Key doesnt exist ... yet.");
+      return nil
+    }
+    
+    ts := new(UserConfigData)
+    err = json.Unmarshal([]byte(res), ts)
+    if err != nil {
+        fmt.Println("Error! not able to read data from redis.")
+        return nil
+    }
+    return ts.Files
 }
 
 
