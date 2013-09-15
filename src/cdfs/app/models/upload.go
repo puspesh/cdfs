@@ -1,17 +1,7 @@
-package main
+package models
 
 import "strconv"
 import "fmt"
-
-type UserConfigData struct {
-        Token   map[string]string
-}
-
-type FileMappingData struct {
-    Id      string
-        Parts   map[string][]string
-}
-
 
 func GetApiHandler(store string, auth string) *GoogleDrive {
 //	if store == "google" {
@@ -49,9 +39,10 @@ func UploadFiles(location string, fileName string, parts int, u *UserConfigData,
 	}
 }
 
+/*
 func main() {
     u := UserConfigData{Token:make(map[string]string),}
     f := FileMappingData{Parts:make(map[string][]string),}
     u.Token["google"]="token"
     UploadFiles("test", "output.txt", 9, &u, &f)
-}
+}*/
