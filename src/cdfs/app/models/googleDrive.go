@@ -25,7 +25,7 @@ var config = &oauth.Config{
 }
 
 // Uploads a file to Google Drive
-func (gd *GoogleDrive) Upload(file string) {
+func (gd *GoogleDrive) Upload(file string, name string) {
 	// Generate a URL to visit for authorization.
     var c oauth.CacheFile = oauth.CacheFile(gd.authString)
     tok,_ := c.Token()
@@ -42,7 +42,7 @@ func (gd *GoogleDrive) Upload(file string) {
 
 	// Define the metadata for the file we are going to create.
 	f := &drive.File{
-		Title:       FOLDER_NAME,
+		Title:       name,
 		Description: DESCRIPTION,
 	}
 

@@ -18,6 +18,7 @@ func UploadFiles(location string, fileName string, parts int, u *UserConfigData,
 	totClients := len(clients)
 	for i := 0; i < parts; i++ {
 		fi := path + "_" + strconv.Itoa(i)
+		fn := fileName + "_" + strconv.Itoa(i)
 		cop := 0
 		loc := []string{}
 		f.Parts[strconv.Itoa(i)] = loc
@@ -27,7 +28,7 @@ func UploadFiles(location string, fileName string, parts int, u *UserConfigData,
                 fmt.Println("file is %s", fi)
 			if err,val := client.CheckSize(); err == nil && val {
                 fmt.Println("file is %s", fi)
-				client.Upload(fi)
+				client.Upload(fi, fn)
 				loc = append(loc, client.Store)
 				cop++
 			} else {
