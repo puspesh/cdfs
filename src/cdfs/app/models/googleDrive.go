@@ -42,7 +42,7 @@ func (gd *GoogleDrive) Upload(file string) string {
 
 	// Define the metadata for the file we are going to create.
 	f := &drive.File{
-		Title:       FOLDER_NAME,
+		Title:       name,
 		Description: DESCRIPTION,
 	}
 

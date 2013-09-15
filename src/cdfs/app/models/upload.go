@@ -19,6 +19,7 @@ func UploadFiles(location string, fileName string, parts int, u *UserConfigData,
 	assetIds := make(map[string]string)
 	for i := 0; i < parts; i++ {
 		fi := path + "_" + strconv.Itoa(i)
+		fn := fileName + "_" + strconv.Itoa(i)
 		cop := 0
 		loc := make(map[string]string)
 		f.Parts[strconv.Itoa(i)] = loc
