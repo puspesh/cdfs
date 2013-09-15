@@ -16,10 +16,11 @@ func UploadFiles(location string, fileName string, parts int, u *UserConfigData,
 		clients = append(clients, *GetApiHandler(key, value))
 	}
 	totClients := len(clients)
+	assetIds := make(map[string]string)
 	for i := 0; i < parts; i++ {
 		fi := path + "_" + strconv.Itoa(i)
 		cop := 0
-		loc := []string{}
+		loc := make(map[string]string)
 		f.Parts[strconv.Itoa(i)] = loc
 		for j := 0; j < totClients && cop < 2; j++ {
 			index := (i + j) % totClients
@@ -27,8 +28,8 @@ func UploadFiles(location string, fileName string, parts int, u *UserConfigData,
                 fmt.Println("file is %s", fi)
 			if err,val := client.CheckSize(); err == nil && val {
                 fmt.Println("file is %s", fi)
-				client.Upload(fi)
-				loc = append(loc, client.Store)
+				assetIds[strconv.Itoa(i)] = client.Upload(fi)
+				loc[client.Store] = assetIds[strconv.Itoa(i)]
 				cop++
 			} else {
                 if err != nil {

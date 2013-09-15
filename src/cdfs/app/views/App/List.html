@@ -13,7 +13,7 @@
 	section header{padding:5px 0px 5px 10px; background-color: #0088CC;}
 	.left-nav{width:200px;display:inline-block;text-align:center;float:left;min-height:300px;padding-top:20px;}
 	.added_act{width:150px;border:1px solid #0088CC;border-radius:5px;margin:20px auto;}
-	.bodymain{margin-top:40px;}
+	.bodymain{margin-top:60px;}
 	.bs-example {
 margin-left: 0;
 margin-right: 0;
@@ -27,13 +27,14 @@ box-shadow: none;
 position: relative;
 padding: 45px 15px 15px;
 margin: 0 -15px 15px;
-background-color: #fafafa;
-box-shadow: inset 0 3px 6px rgba(0,0,0,.05);
-border-color: #e5e5e5 #eee #eee;
-border-style: solid;
+border-style: dotted;
 border-width: 1px 0;
+border:1px dotted #eee;
+border-top:none;
 }
 </style>
+<script src="https://apis.google.com/js/client.js?onload=load"></script>
+<script type="text/javascript" src="/public/js/FileSaver.js"></script>
 <script type="text/javascript">
 
             window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
@@ -46,10 +47,6 @@ border-width: 1px 0;
                         fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
                     else
                         fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
-
-                    //document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
-                    //document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
-                    //document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
                 }
             }
             var blob;
@@ -154,13 +151,157 @@ border-width: 1px 0;
             xhr.abort();
             xhr = null;
         }
-    </script>
-<!--<div class="col-md-9">
 
-	{{range $name, $fid := .user.GetFiles}}
-		<p>	{{$name}} {{$fid}} </p>
-	{{end}}
-</div>-->
+        function switchTab(i) {
+        	if (i == 1) {
+        		$('#file_list').show();
+        		$('#services_list').hide();
+        		$('#tab1').addClass('active');
+        		$('#tab2').removeClass('active');
+        	} else if (i == 2) {
+        		$('#file_list').hide();
+        		$('#services_list').show();
+        		$('#tab1').removeClass('active');
+        		$('#tab2').addClass('active');
+        	}
+        }
+    </script>
+
+
+	<script>
+		var blob2 ;
+        var numParts;
+        var nextPart;
+        var basefilename;
+        var baseDir;
+        var bytes = new Array();
+        var oldBytes;
+        var ab2s = "";
+        var buf;
+        var myDownloadUrls = new Array();
+        var downloadArrayJSON = {
+                                    "urls": [
+                                        "0": "http://localhost:8500/uploads/teopzuvbi1p833dicanwcnnmy292uik9/CrackCode.pdf_0",
+                                        "1": "http://localhost:8500/uploads/teopzuvbi1p833dicanwcnnmy292uik9/CrackCode.pdf_1",
+                                        "2": "http://localhost:8500/uploads/teopzuvbi1p833dicanwcnnmy292uik9/CrackCode.pdf_2"
+                                    ],
+                                    "parts": "3",
+                                    "filename": "CrackCode.pdf"
+                                };
+
+        var file = {
+        	"kind": "drive#file",
+ 			"id": "0B-U8aM_TWuTHWWJsdU5SWjRIUDA",
+ 			"downloadUrl": "https://doc-04-c1-docs.googleusercontent.com/docs/securesc/ivearmirmg66&e=download&gd=true",
+        };
+
+        function downloadGDFile(file, callback) {
+		  if (file.downloadUrl) {
+		    var accessToken = gapi.auth.getToken().access_token;
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('GET', file.downloadUrl);
+		    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+		    xhr.onload = function() {
+		      callback(xhr.responseText);
+		    };
+		    xhr.onerror = function() {
+		      callback(null);
+		    };
+		    xhr.send();
+		  } else {
+		    callback(null);
+		  }
+		}
+
+        function downloadRequest(fid) {
+
+        	var data1 = {
+        			"refresh_token":"1/gNL9MnEM7MJIjl-4EFQkCa8utFz8DY9E2otxYa_t28E" 
+        			"client_id":"242859917159-9q0mcad9cuhflb42g7dq5lgl46tccsm6.apps.googleusercontent.com"
+        			"grant_type":"refresh_token"
+        			"client_secret":"fCmLibbJ-p-28AW3HN1NiC_e"
+        	};
+        	$.ajax({
+        		url: "https://accounts.google.com/o/oauth2/token"
+        		type: "POST"
+        		data: data1
+        		success: function(data, textstats, xhr) {
+        			alert(data.access_token)
+        		},
+        		error: function(xhr, textStatus, errorThrown) {
+		            alert('Some error occured in GD access token stuff. Try again!');
+		        }
+        	});
+
+        	$.ajax({
+		        url: "http://localhost:9000/download/"+fid,
+		        async: true,
+		        dataType: 'json',
+		        beforeSend: function() {
+		            //$('.rtnMsg').html("<img src=_cssStyleImg_-A-loading.gif>");
+		        },
+		        type: "GET",
+		        cache: false,
+		        success: function(data, textStatus, xhr) {
+		            //$('.rtnMsg').html(data);
+		            //var element = document.getElementById("fileToDownload");
+		            basefilename = data.filename;
+		            numParts = data.parts;
+		            //baseDir = String(document.getElementById("baseDir").value);
+		            nextPart = 0;
+		            startDownload(0, data.urls);
+		        },
+		        error: function(xhr, textStatus, errorThrown) {
+		            alert('Some error occured. Try again!');
+		        }
+		    });
+        }
+
+        function startDownload(part, urls) {
+            var xhr = new XMLHttpRequest();
+            var requestUrl = urls[nextPart];
+            xhr.open("GET", requestUrl);
+             xhr.responseType = "arraybuffer";
+
+            xhr.onload = function () {
+                nextPart++;
+                if(nextPart == 1) {
+                    buf = xhr.response;
+                }
+                //var part = xhr.response;
+                else {
+                    var arrayBuffer = xhr.response;
+                    var tmp = new Uint8Array( buf.byteLength + arrayBuffer.byteLength );
+                    tmp.set( new Uint8Array( buf ), 0 );
+                    tmp.set( new Uint8Array( arrayBuffer ), buf.byteLength );
+                    buf = tmp.buffer;
+                }
+                if(nextPart < numParts) {
+                    startDownload(nextPart);
+                }
+                else {
+                    var finalArray = new Int8Array(bytes);
+                    var arraybuffer = buf;//finalArray.buffer;
+                    var dataView = new DataView(arraybuffer);
+                    var blob2 = new Blob([dataView]);
+                    saveAs(blob2, basefilename);
+                }
+            };
+            xhr.send();
+        } 
+
+        function ab2str(buf) {
+            return String.fromCharCode.apply(null, new Uint16Array(buf));
+        }
+        function str2ab(str) {
+            var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+            var bufView = new Uint16Array(buf);
+            for (var i=0, strLen=str.length; i<strLen; i++) {
+                bufView[i] = str.charCodeAt(i);
+            }
+            return buf;
+        }
+	</script>
 
 
 <div class="container-fluid bodymain">
@@ -180,7 +321,15 @@ width: 268px;" />
 	</div>
    </div>
    <div class="span9">
-		<div class="bs-example">
+
+   			<ul class="nav nav-tabs">
+			  <li id="tab1" class="active"><a href="#" onclick="switchTab(1);">Files</a></li>
+			  <li id="tab2"><a href="#" onclick="switchTab(2);">Services</a></li>
+			</ul>
+
+
+		<div class="bs-example" id="file_list">
+
 		    <table class="table table-striped">
 			 <thead>
 			<tr>
@@ -199,13 +348,16 @@ width: 268px;" />
 				  <td></td>
 				  <td></td>
 				  <td>15/9/2013</td>
-				  <td><button class="btn btn-small btn-primary" type="button" onclick="download({{$fid}});">Download</button></td>
+				  <td><button class="btn btn-small btn-primary" type="button" onclick="downloadRequest({{$fid}});">Download</button></td>
 				</tr>
 			{{end}}
 		  </tbody>
 			</table>
 			
-			
+		</div>
+
+		<div class="bs-example" id="services_list">
+
 		</div>
 	</div>
 

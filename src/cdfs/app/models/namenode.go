@@ -18,7 +18,7 @@ type UserConfigData struct {
 
 type FileMappingData struct {
     Id      string `json:"id"`
-    Parts   map[string][]string  `json:"token"`
+    Parts   map[string]map[string]string  `json:"token"`
 }
 
 func getConn() redis.Conn {
@@ -52,7 +52,7 @@ func getFileMappingKey(fid string) string {
   return "file_"+fid+"_map" 
 }
 
-func FileUploaded(uid string, partsInfo map[string][]string, fid string, fname string) {
+func FileUploaded(uid string, partsInfo map[string]map[string]string, fid string, fname string) {
     c := getConn()
     defer c.Close()
 
@@ -75,11 +75,33 @@ func FileUploaded(uid string, partsInfo map[string][]string, fid string, fname s
     }
 }
 
-func GetFileMetadata(fid string, part int) string {
+func GetFileMetadata(fid string) map[string]map[string]string {
     c := getConn()
     defer c.Close()
-  
-    return ""
+    retData := make(map[string]map[string]string)
+
+    res, err := redis.String(c.Do("GET", getFileMappingKey(fid)))
+    if err != nil {
+      fData := new(FileMappingData)
+      err := json.Unmarshal([]byte(res), fData)
+      if err != nil {
+        fmt.Println("ERROR! not able to unmarshal the file metadata ...")
+      }
+
+
+      for k, v := range fData.Parts {
+        for l, m := range v {
+          t := make(map[string]string)
+          t[l] = m
+          retData[k] = t
+          break
+        }
+      }
+      return retData
+
+    } else {
+      return nil
+    }
 }
 
 func UpdateUser(uid string, tokens map[string]string, fname string, fid string) {

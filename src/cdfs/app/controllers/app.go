@@ -12,8 +12,9 @@ type UploadData struct {
 }
 
 type DownloadData struct {
-      numParts      int
-      parts         map[string]string
+      filename     string
+      parts        int
+      urls         map[string]string
 }
 
 type App struct {
@@ -40,7 +41,7 @@ func (c App) Upload(fname string, fid string, n string) revel.Result {
     // Put the upload logic here 
     // and then call FileUploaded() to add the metadata
     u := models.UserConfigData{Token:make(map[string]string),}
-    f := models.FileMappingData{Parts:make(map[string][]string),}
+    f := models.FileMappingData{Parts:make(map[string]map[string]string),}
     u.Token["google"]="/tmp/token"
 
     nn, _ := strconv.Atoi(n)
@@ -50,11 +51,31 @@ func (c App) Upload(fname string, fid string, n string) revel.Result {
 
     return c.Render()
 }
+
+func getGoogleUrl(u string) string {
+  return ""
+}
+
 func (c App) Download(fid string) revel.Result {
   // return info to which nodes do this needs to download 
   // file blocks from and merge
-  
-	return c.Render()
+  d := models.GetFileMetadata(fid)
+
+  returnData := new(DownloadData)
+  returnData.filename = ""
+  returnData.parts = 1
+  returnData.urls = make(map[string]string)
+  for k, v := range d {
+    u := ""
+    for l, m := range v {
+      if(l == "google") {
+        u = getGoogleUrl(m)
+        break;
+      }
+    }
+    returnData.urls[k] = u
+  }
+	return c.RenderJson(returnData)
 }
 
 func (c App) List() revel.Result {

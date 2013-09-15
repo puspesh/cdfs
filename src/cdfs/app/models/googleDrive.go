@@ -25,7 +25,7 @@ var config = &oauth.Config{
 }
 
 // Uploads a file to Google Drive
-func (gd *GoogleDrive) Upload(file string) {
+func (gd *GoogleDrive) Upload(file string) string {
 	// Generate a URL to visit for authorization.
     var c oauth.CacheFile = oauth.CacheFile(gd.authString)
     tok,_ := c.Token()
@@ -62,6 +62,8 @@ func (gd *GoogleDrive) Upload(file string) {
 	gd.totalSize += 1024 * 1024
 	gd.totalSize += uint32(tEnd - tStart)
 	fmt.Printf("Created: ID=%v, Title=%v\n", r.Id, r.Title)
+
+	return r.Id
 }
 
 func (gd *GoogleDrive) CheckSize() (error, bool) {
