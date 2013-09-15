@@ -31,15 +31,14 @@ func (c App) Register() revel.Result {
       return c.Render()
 }
 
-func (c App) Upload(fid string, n int) revel.Result {
-    fmt.Println("HERE with file "+fid)
+func (c App) Upload(fid string, n string) revel.Result {
     user := new(models.User)
     user.Id = "6964943e-535a-4736-85ad-4baaa9656709"
 
     // Put the upload logic here 
     // and then call FileUploaded() to add the metadata
 
-
+    
     return c.Render()
 }
 func (c App) Download(fid string) revel.Result {
@@ -50,8 +49,6 @@ func (c App) Download(fid string) revel.Result {
 }
 
 func (c App) List() revel.Result {
-  
-  //w.Header().Set("Access-Control-Allow-Origin", "*")
   user := new(models.User)
   user.Id = "6964943e-535a-4736-85ad-4baaa9656709"
 	return c.Render(user)
