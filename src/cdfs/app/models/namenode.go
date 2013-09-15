@@ -55,7 +55,7 @@ func getFileMappingKey(fid string) string {
 func FileUploaded(fid string, partsInfo map[string][]string) {
     c := getConn()
     defer c.Close()
-    
+        
     _, err := redis.String(c.Do("GET", getFileMappingKey(fid)))
     if err != nil {
       fData := new(FileMappingData)

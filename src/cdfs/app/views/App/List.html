@@ -34,7 +34,132 @@ border-style: solid;
 border-width: 1px 0;
 }
 </style>
+<script type="text/javascript">
 
+            window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
+
+            function fileSelected() {
+                var file = document.getElementById('fileToUpload').files[0];
+                if (file) {
+                    var fileSize = 0;
+                    if (file.size > 1024 * 1024)
+                        fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                    else
+                        fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+
+                    //document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
+                    //document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+                    //document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+                }
+            }
+            var blob;
+     var start;
+     var part;
+     var chunk;
+     var SIZE ;//= blob.size;
+     var xhr;
+     var BYTES_PER_CHUNK = 1048576;
+     var rand = function() {
+        return Math.random().toString(36).substr(2); // remove `0.`
+        };
+
+    var token = function() {
+        return rand() + rand(); // to make it longer
+    };
+
+    var _token = token();
+
+    		String.prototype.hashCode = function(){
+			    var hash = 0, i, char;
+			    if (this.length == 0) return hash;
+			    for (i = 0, l = this.length; i < l; i++) {
+			        char  = this.charCodeAt(i);
+			        hash  = ((hash<<5)-hash)+char;
+			        hash |= 0; // Convert to 32bit integer
+			    }
+			    return hash;
+			};
+
+     		function sendRequest() {
+	            blob = document.getElementById('fileToUpload').files[0];
+	            //const BYTES_PER_CHUNK = 1048; // 1MB chunk sizes.
+	            SIZE = blob.size;
+	            start = 0;                
+	            part = 0;
+
+	            chunk = blob.slice(start, BYTES_PER_CHUNK);
+	            uploadFile(chunk,part);
+	            start = start + BYTES_PER_CHUNK;
+	            part++;  
+        	}
+
+			function uploadFile(blobFile,part) {
+	            var file = document.getElementById('fileToUpload').files[0];  
+	            xhr = new XMLHttpRequest();
+	            xhr.upload.addEventListener("progress", uploadProgress, false);
+	            xhr.addEventListener("load", uploadComplete, false);
+	            xhr.addEventListener("error", uploadFailed, false);
+	            xhr.addEventListener("abort", uploadCanceled, false);
+	            xhr.open("POST", "http://localhost:8082/upload?"+"file="+blob.name+"&num=" + part+ "&token="+_token);
+	           
+	            //xhr.setRequestHeader('Cache-Control','no-cache');
+	            var fd = new FormData();
+	            fd.append("TheFile", file);
+	            //fd.append("file", file.name);
+	            //fd.append("num",part);
+
+	            xhr.send(fd);
+
+	            var hcode = file.name.hashCode()
+	            $.ajax({
+	            	url: "http://localhost:9000/upload/"+hcode,
+        			type: "GET",
+	            });
+	            return;
+	        }
+
+            function uploadProgress(evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = Math.round(start * 100 / SIZE);
+                    document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+                }
+                else {
+                    document.getElementById('progressNumber').innerHTML = 'unable to compute';
+                }
+            }
+
+            function uploadComplete(evt) {
+            /* This event is raised when the server send back a response */
+            blob = document.getElementById('fileToUpload').files[0];
+            if( start < SIZE ) {
+                chunk = blob.slice(start, start+BYTES_PER_CHUNK);
+                uploadFile(chunk,part);
+                start = start + BYTES_PER_CHUNK;
+                part++;
+            }
+            else {
+            	alluploadDone();
+            }
+        }
+
+        function alluploadDone() {
+            xhr = new XMLHttpRequest();
+
+            //Inform the service with the params
+            xhr.open("POST", 
+            	"http://localhost:9000/upload/"+_token+"/"+part);
+            xhr.send();
+        }
+
+        function uploadFailed(evt) {
+            alert("There was an error attempting to upload the file.");
+        }
+
+        function uploadCanceled(evt) {
+            xhr.abort();
+            xhr = null;
+        }
+    </script>
 <!--<div class="col-md-9">
 
 	{{range $name, $fid := .user.GetFiles}}
@@ -48,13 +173,16 @@ border-width: 1px 0;
    <div class="row-fluid">
    <div class="span3">
    <div class="well sidebar-nav">
-   <span class="btn-file"><input type="file" style="background: #fff;
+   <span class="btn-file">
+   			<input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" style="background: #fff;
 border: 1px solid #ddd;
 font-size: 12px;
 margin-bottom: 5px;
 padding: 2px;
-width: 268px;" /></span>
-		<button class="btn btn-large btn-primary" type="button">Upload Data</button>
+width: 268px;" />
+	</span>
+		<button class="btn btn-large btn-primary" type="button" onclick="sendRequest();">Upload Data</button>
+
 		<!--<div class="added_act">
 			<p>Added Acount</p>
 			<p>abc@dropbox.com</p>
@@ -140,9 +268,6 @@ width: 268px;" /></span>
 			  <td>13/9/2013</td>
 			  <td>Meta Data</td>
 			</tr>
-			
-			
-			
 		  </tbody>
 </table>
 			

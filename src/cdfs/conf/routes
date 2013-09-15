@@ -6,8 +6,9 @@ module:testrunner
 
 GET     /                                       App.Index
 GET     /login                                  App.Login
-GET     /upload/:fid                            App.Upload
+GET     /upload/:fid/:n                         App.Upload
 GET     /download/:fid                          App.Download
+GET     /u                                      App.Up
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
