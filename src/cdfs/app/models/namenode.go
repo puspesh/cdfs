@@ -52,10 +52,12 @@ func getFileMappingKey(fid string) string {
   return "file_"+fid+"_map" 
 }
 
-func FileUploaded(fid string, partsInfo map[string][]string) {
+func FileUploaded(uid string, partsInfo map[string][]string, fid string, fname string) {
     c := getConn()
     defer c.Close()
-        
+
+    UpdateUser(uid, nil, fname, fid)
+
     _, err := redis.String(c.Do("GET", getFileMappingKey(fid)))
     if err != nil {
       fData := new(FileMappingData)
@@ -80,7 +82,7 @@ func GetFileMetadata(fid string, part int) string {
     return ""
 }
 
-func UpdateUser(uid string, tokens map[string]string) {
+func UpdateUser(uid string, tokens map[string]string, fname string, fid string) {
     c := getConn()
     defer c.Close()
 
@@ -89,13 +91,22 @@ func UpdateUser(uid string, tokens map[string]string) {
       fmt.Println("Error! Key doesnt exist ... yet.");
       RegisterUser(tokens)
     } else {
-      // fmt.Println("Before: "+res)
+      fmt.Println("Before: "+res)
       ts := new(UserConfigData)
       err := json.Unmarshal([]byte(res), ts)
       if err != nil {
           fmt.Println("Error! not able to read data from redis.")
           return
       }
+
+      if ts.Files == nil {
+        ts.Files = make(map[string]string)
+      }
+
+      if _, ok := ts.Files[fname]; !ok {
+        ts.Files[fname] = fid
+      }
+      
       for k, v := range tokens {
         if _, ok := ts.Token[k]; !ok {
           ts.Token[k] = v
@@ -107,7 +118,7 @@ func UpdateUser(uid string, tokens map[string]string) {
           return
       }
       c.Do("SET", "user_"+uid+"_data", b)
-      // fmt.Println("After: "+string(b))
+      fmt.Println("After: "+string(b))
     }
 }
 
@@ -149,6 +160,7 @@ func GetFileListForUser(userId string) map[string]string {
         fmt.Println("Error! not able to read data from redis.")
         return nil
     }
+    fmt.Println("returning here ..... ")
     return ts.Files
 }
 

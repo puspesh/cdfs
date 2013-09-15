@@ -66,7 +66,8 @@ func (gd *GoogleDrive) Upload(file string) {
 
 func (gd *GoogleDrive) CheckSize() (error, bool) {
     var c oauth.CacheFile = oauth.CacheFile(gd.authString)
-    tok,_ := c.Token()
+    tok, err := c.Token()
+    fmt.Println(err)
 	t := &oauth.Transport{
 		Config:    config,
 		Transport: http.DefaultTransport,

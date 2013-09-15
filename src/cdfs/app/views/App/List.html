@@ -142,7 +142,7 @@ border-width: 1px 0;
 
             //Inform the service with the params
             xhr.open("GET", 
-            	"http://localhost:9000/upload/"+_token+"/"+part);
+            	"http://localhost:9000/upload/"+blob.name+"/"+_token+"/"+part);
             xhr.send();
         }
 
@@ -177,13 +177,6 @@ padding: 2px;
 width: 268px;" />
 	</span>
 		<button class="btn btn-large btn-primary" type="button" onclick="sendRequest();">Upload Data</button>
-
-		<!--<div class="added_act">
-			<p>Added Acount</p>
-			<p>abc@dropbox.com</p>
-			<p>abc@google.com</p>
-			<p>abc@amazon.com</p>
-		</div>-->
 	</div>
    </div>
    <div class="span9">
@@ -200,71 +193,17 @@ width: 268px;" />
 			</tr>
 			</thead>
 		  <tbody>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			  
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr><tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
-			<tr>
-			  <td>file 1</td>
-			  <td>amzon</td>
-			  <td>50</td>
-			  <td>13/9/2013</td>
-			  <td>Meta Data</td>
-			</tr>
+		  	{{range $name, $fid := .user.GetFiles}}
+			  	<tr>
+				  <td>{{$name}}</td>
+				  <td></td>
+				  <td></td>
+				  <td>15/9/2013</td>
+				  <td><button class="btn btn-small btn-primary" type="button" onclick="download({{$fid}});">Download</button></td>
+				</tr>
+			{{end}}
 		  </tbody>
-</table>
+			</table>
 			
 			
 		</div>

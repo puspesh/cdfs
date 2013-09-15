@@ -1,8 +1,10 @@
 package controllers
 
-import "github.com/robfig/revel"
-import "cdfs/app/models"
-import "fmt"
+import (
+  "github.com/robfig/revel"
+  "cdfs/app/models"
+  "strconv"
+)
 
 type UploadData struct {
       numParts      int
@@ -31,14 +33,21 @@ func (c App) Register() revel.Result {
       return c.Render()
 }
 
-func (c App) Upload(fid string, n string) revel.Result {
+func (c App) Upload(fname string, fid string, n string) revel.Result {
     user := new(models.User)
     user.Id = "6964943e-535a-4736-85ad-4baaa9656709"
 
     // Put the upload logic here 
     // and then call FileUploaded() to add the metadata
+    u := models.UserConfigData{Token:make(map[string]string),}
+    f := models.FileMappingData{Parts:make(map[string][]string),}
+    u.Token["google"]="/tmp/token"
 
-    
+    nn, _ := strconv.Atoi(n)
+    models.UploadFiles("/tmp/"+fid, fname, nn, &u, &f)
+
+    models.FileUploaded(user.Id, f.Parts, fid, fname)
+
     return c.Render()
 }
 func (c App) Download(fid string) revel.Result {

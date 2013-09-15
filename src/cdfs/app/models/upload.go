@@ -10,7 +10,7 @@ func GetApiHandler(store string, auth string) *GoogleDrive {
 }
 
 func UploadFiles(location string, fileName string, parts int, u *UserConfigData, f *FileMappingData) {
-	path := location + "/" + fileName
+	path := location + "_" + fileName
 	clients := []GoogleDrive{}
 	for key, value := range u.Token {
 		clients = append(clients, *GetApiHandler(key, value))
