@@ -50,6 +50,8 @@ func (c App) Download(fid string) revel.Result {
 }
 
 func (c App) List() revel.Result {
+  
+  //w.Header().Set("Access-Control-Allow-Origin", "*")
   user := new(models.User)
   user.Id = "6964943e-535a-4736-85ad-4baaa9656709"
 	return c.Render(user)

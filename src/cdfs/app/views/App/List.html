@@ -104,17 +104,12 @@ border-width: 1px 0;
 	           
 	            //xhr.setRequestHeader('Cache-Control','no-cache');
 	            var fd = new FormData();
-	            fd.append("TheFile", file);
-	            //fd.append("file", file.name);
-	            //fd.append("num",part);
+	            fd.append("TheFile", blobFile);
+	            fd.append("file", file.name);
+	            fd.append("num",part);
 
 	            xhr.send(fd);
 
-	            var hcode = file.name.hashCode()
-	            $.ajax({
-	            	url: "http://localhost:9000/upload/"+hcode,
-        			type: "GET",
-	            });
 	            return;
 	        }
 

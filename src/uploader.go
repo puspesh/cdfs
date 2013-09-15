@@ -11,7 +11,14 @@ import (
 )
 
 func upload(rw http.ResponseWriter, req *http.Request) {
+        rw.Header().Set("Access-Control-Allow-Origin", "*")
         fmt.Println("Came here .. ");
+
+        vals := req.URL.Query()
+        filenamesent := vals["file"][0]
+        fileParts := vals["num"][0]
+        fileToken := vals["token"][0]
+
         formFile, formHead, err := req.FormFile("TheFile")
         if err != nil {
           fmt.Println(err)
@@ -26,22 +33,17 @@ func upload(rw http.ResponseWriter, req *http.Request) {
         if fileIndex < 0 {
                 panic("runUp: no filename")
         }
+        /*
         filename := itemHead[fileIndex+len(lookfor):]
         filename = filename[:strings.Index(filename, "\"")]
+        */
+        filename := fileToken +"_"+filenamesent+"_"+fileParts
+        fmt.Println("filename == "+filename);
 
-        slashIndex := strings.LastIndex(filename, "\\")
-        if slashIndex > 0 {
-                filename = filename[slashIndex+1:]
-        }
-        slashIndex = strings.LastIndex(filename, "/")
-        if slashIndex > 0 {
-                filename = filename[slashIndex+1:]
-        }
-        _, saveToFilename := filepath.Split(filename)
         //END: work around IE sending full filepath
 
         //join the filename to the upload dir
-        saveToFilePath := filepath.Join("/tmp", saveToFilename)
+        saveToFilePath := filepath.Join("/tmp/", filename)
 
         osFile, err := os.Create(saveToFilePath)
         if err != nil {
@@ -53,7 +55,7 @@ func upload(rw http.ResponseWriter, req *http.Request) {
         if err != nil {
                 panic(err.Error())
         }
-        fmt.Printf("ALLOW: %s SAVE: %s (%d)\n", req.RemoteAddr, saveToFilename, count)
+        fmt.Printf("ALLOW: %s SAVE: %s (%d)\n", req.RemoteAddr, filename, count)
         rw.Write([]byte("Upload Complete for " + filename))
 }
 
